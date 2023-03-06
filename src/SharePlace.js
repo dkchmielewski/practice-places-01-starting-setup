@@ -11,7 +11,7 @@ class PlaceFinder {
   }
 
   selectPlace(coordinates) {
-    if(this.map) {
+    if (this.map) {
       this.map.render(coordinates);
     } else {
       this.map = new Map(coordinates);
@@ -25,18 +25,21 @@ class PlaceFinder {
       );
       return;
     }
-    const modal = new Modal('loading-modal-content', 'Loading location - please wait!');
+    const modal = new Modal(
+      'loading-modal-content',
+      'Loading location - please wait!'
+    );
     modal.show();
     navigator.geolocation.getCurrentPosition(
-      successResult => {
+      (successResult) => {
         modal.hide();
         const coordinates = {
           lat: successResult.coords.latitude,
-          lng: successResult.coords.longitude
+          lng: successResult.coords.longitude,
         };
         this.selectPlace(coordinates);
       },
-      error => {
+      (error) => {
         modal.hide();
         alert(
           'Could not locate you unfortunately. Please enter an address manually!'
@@ -45,7 +48,19 @@ class PlaceFinder {
     );
   }
 
-  findAddressHandler() {}
+  findAddressHandler(event) {
+    event.preventDefault();
+    const address = event.target.querySelector('input').value;
+    if (!address || address.trim().length === 0) {
+      alert('Invalid address entered - please try again!');
+      return;
+    }
+    const modal = new Modal(
+      'loading-modal-content',
+      'Loading location - please wait!'
+    );
+    modal.show();
+  }
 }
 
 const placeFinder = new PlaceFinder();
